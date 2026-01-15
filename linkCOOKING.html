@@ -1,11 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>คลังสูตรอาหาร | Sakura Kitchen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sawarabi+Mincho&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            margin: 0;
+            background-image: url('https://img.lovepik.com/bg/20231216/street-in-an-japanese-village-full-of-trees_2494517_wh1200.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+        }
+        h1, h2, h3, h4 { font-family: 'Sawarabi Mincho', serif; }
+        
+        .sidebar {
+            position: fixed; top: 0; left: -250px; width: 220px; height: 100%;
+            background-color: #111; transition: 0.3s; padding-top: 3rem; z-index: 2000;
+        }
+        .sidebar a { padding: 0.8rem 1.2rem; text-decoration: none; color: white; display: block; font-weight: bold; }
+        .sidebar a:hover { background-color: #b30000; }
+
+        .menu-toggle {
+            position: fixed; top: 1rem; left: 1rem; background-color: #b30000;
+            color: white; border: none; border-radius: 5px; padding: 0.4rem 0.8rem; cursor: pointer; z-index: 3000;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.8); padding: 1.5rem;
+            border-bottom: 4px solid #b30000; text-align: center;
+        }
+
+        .main-container {
+            max-width: 900px; margin: 2rem auto;
+            background-color: rgba(0, 0, 0, 0.85); padding: 2rem; border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .recipe-section {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem; margin-bottom: 2rem;
+        }
+
+        .jp-title { font-size: 1.8rem; color: #ffc107; margin-bottom: 0.5rem; }
+        .recipe-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 12px; margin: 1rem 0; border: 2px solid #b30000; }
+        
+        .ingredient-box { background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffc107; }
+        .price-tag { color: #ffc107; font-weight: bold; font-size: 1.1rem; margin-top: 0.5rem; }
+
+        /* ปุ่มดูสูตร */
+        .view-recipe-btn {
+            display: inline-block; margin-top: 1rem; background-color: #b30000; color: white;
+            padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: bold; transition: 0.3s;
+            cursor: pointer; border: 2px solid transparent;
+        }
+        .view-recipe-btn:hover { background-color: #ffc107; color: #000; transform: scale(1.05); }
+
+        /* Modal Styles */
+        #recipeModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 4000; overflow-y: auto; padding: 2rem 1rem;
+        }
+        .modal-content {
+            background: #1a1a1a; max-width: 700px; margin: auto; padding: 2rem;
+            border-radius: 15px; border: 2px solid #b30000; position: relative;
+        }
+        .close-modal { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #ffc107; }
+    </style>
 </head>
 <body>
-    <h2>Hello! I'm Thitiwut Inrun </h2>
+
+    <button class="menu-toggle" onclick="toggleSidebar()">☰ MENU</button>
+    <div id="sidebar" class="sidebar">
+        <a href="#">หน้าแรก</a>
+        <a href="#">สูตรซูชิ</a>
+        <a href="#">สูตรราเมน</a>
+        <a href="#">สูตรของหวาน</a>
+    </div>
+
+    <header>
+        <h1>秘伝のレシピ (สูตรอาหารลับจากซากุระ)</h1>
+    </header>
+
+    <div class="main-container">
+        <div class="recipe-section">
+            <h2 class="jp-title">握り寿司 (Nigiri-zushi)</h2>
+            <img src="https://res.cloudinary.com/norgesgruppen/images/c_scale,dpr_auto,f_auto,q_auto:eco,w_1600/fsl7xvt5t2vwbgcq4xmp/hjemmelaget-nigiri-sushi" class="recipe-img">
+            <div class="ingredient-box">
+                <p class="text-gray-300">ข้าวปั้นหน้าเนื้อปลาสด เช่น แซลมอน ทูน่า หรือปลาหมึก</p>
+                <div class="view-recipe-btn" onclick="openRecipe('นิกิริซูชิ', 'ปลาสด, ข้าวญี่ปุ่น, วาซาบิ', '1. ปั้นข้าวเป็นคำ 2. วางวาซาบิเล็กน้อย 3. วางเนื้อปลาด้านบน')">ดูวิธีทำอย่างละเอียด</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h2 class="jp-title">巻き寿司 (Maki-zushi)</h2>
+            <img src="https://img.wongnai.com/p/1968x0/2018/07/11/191923b296f04a91ba1060f4f7259091.jpg" class="recipe-img">
+            <div class="ingredient-box">
+                <p class="text-gray-300">ซูชิห่อสาหร่าย มีไส้ปลาหรือผัก</p>
+                <div class="view-recipe-btn" onclick="openRecipe('มากิซูชิ', 'สาหร่ายแผ่น, ข้าวญี่ปุ่น, ไส้ต่างๆ', '1. วางข้าวบนสาหร่าย 2. ใส่ไส้ตรงกลาง 3. ม้วนให้แน่นแล้วหั่น')">ดูวิธีทำอย่างละเอียด</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h2 class="jp-title">醤油ラーメン (Shoyu Ramen)</h2>
+            <img src="https://img.wongnai.com/p/1920x0/2021/11/28/467367208de440d9a1c12c882e84a680.jpg" class="recipe-img">
+            <div class="ingredient-box">
+                <p class="text-gray-300">บะหมี่น้ำซุปซีอิ๊วรสเข้มข้น พร้อมเนื้อหมูชาชู</p>
+                <div class="view-recipe-btn" onclick="openRecipe('โชยุราเมน', 'เส้นราเมน, ซุปโชยุ, หมูชาชู', '1. ลวกเส้น 2. เตรียมน้ำซุป 3. จัดจานพร้อมเครื่องเคียง')">ดูวิธีทำอย่างละเอียด</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h2 class="jp-title">味噌ラーメン (Miso Ramen)</h2>
+            <img src="https://d3dyak49qszsk5.cloudfront.net/108258647_l_65bac75a44.jpg" class="recipe-img">
+            <div class="ingredient-box">
+                <p class="text-gray-300">บะหมี่น้ำซุปมิโสะเข้มข้นรสกลมกล่อม</p>
+                <div class="view-recipe-btn" onclick="openRecipe('มิโสะราเมน', 'เส้นราเมน, มิโสะ paste, น้ำซุปกระดูก', '1. ผสมมิโสะในน้ำซุป 2. ลวกเส้นใส่ชาม 3. ตกแต่งด้วยข้าวโพดและหมู')">ดูวิธีทำอย่างละเอียด</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h2 class="jp-title">弁当 (Bento)</h2>
+            <img src="https://tse4.mm.bing.net/th?id=OIP.cnTRBcgIl4t477qm2mByYwHaHJ&pid=Api&P=0&h=180" class="recipe-img">
+            <div class="ingredient-box">
+                <p class="text-gray-300">กล่องข้าวรวมชุด จัดเต็มอาหารญี่ปุ่นครบครัน</p>
+                <div class="view-recipe-btn" onclick="openRecipe('ชุดเบนโตะ', 'ข้าว, ของทอด, ผักดอง, ไข่ม้วน', '1. จัดเตรียมกับข้าว 3-4 อย่าง 2. วางข้าวสวย 3. จัดลงกล่องให้สวยงาม')">ดูวิธีทำอย่างละเอียด</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h2 class="jp-title">抹茶もち (Matcha Mochi)</h2>
+            <img src="https://lzd-img-global.slatic.net/g/ff/kf/S35d5e77272a74a27bd226c936a82ebeev.jpg_720x720q80.jpg" class="recipe-img">
+            <div class="ingredient-box">
+                <p class="text-gray-300">โมจิชาเขียวเหนียวนุ่ม หอมหวานละมุน</p>
+                <div class="view-recipe-btn" onclick="openRecipe('มัทฉะโมจิ', 'แป้งข้าวเหนียว, ผงมัทฉะ, น้ำตาล', '1. ผสมแป้งและมัทฉะ 2. กวนจนเหนียว 3. ปั้นเป็นก้อนคลุกผงแป้ง')">ดูวิธีทำอย่างละเอียด</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="recipeModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeRecipe()">&times;</span>
+            <h2 id="modalTitle" class="text-3xl text-amber-500 mb-4"></h2>
+            <h4 class="text-xl text-red-500 mb-2">วัตถุดิบ:</h4>
+            <p id="modalIngredients" class="mb-4 text-gray-200"></p>
+            <h4 class="text-xl text-red-500 mb-2">ขั้นตอนการทำ:</h4>
+            <p id="modalSteps" class="leading-relaxed text-gray-200"></p>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 2rem; background: rgba(0,0,0,0.9); border-top: 2px solid #b30000;">
+        &copy; 2025 Sakura Recipe Archive | All Rights Reserved
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.left = (sidebar.style.left === '0px') ? '-250px' : '0px';
+        }
+
+        function openRecipe(title, ingredients, steps) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalIngredients').innerText = ingredients;
+            document.getElementById('modalSteps').innerText = steps;
+            document.getElementById('recipeModal').style.display = 'block';
+        }
+
+        function closeRecipe() {
+            document.getElementById('recipeModal').style.display = 'none';
+        }
+
+        // ปิด Modal เมื่อคลิกข้างนอกกล่อง
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('recipeModal')) {
+                closeRecipe();
+            }
+        }
+    </script>
 </body>
 </html>
